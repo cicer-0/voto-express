@@ -1,0 +1,37 @@
+version: '3.8'
+
+networks:
+  app:
+    name: app
+
+services:
+  vote-express:
+    image: webdevops/php-nginx:8.2
+    container_name: vote-express
+    restart: on-failure
+    working_dir: /app
+    ports:
+      - "91:80"
+    volumes:
+      - ./app:/app:rw
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+    depends_on:
+      - db-vote-express
+    networks:
+      - app
+  
+  db-vote-express:
+    image: mysql:8.0
+    container_name: db-vote-express
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    volumes:
+      - ./database/db:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: exito
+      MYSQL_DATABASE: ddbvote
+    ports:
+      - "3311:3306"
+    networks:
+      - app

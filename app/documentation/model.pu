@@ -1,0 +1,85 @@
+@startuml
+
+entity "Institucion" {
+  + id: int
+  + name: string
+  + address: string
+  + city: string
+  + country: string
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+entity "Eleccion" {
+  + id: int
+  + name: string
+  + start_date: timestamp
+  + end_date: timestamp
+  + institucion_id: int
+  + description: text
+  + status: enum('Planned', 'Ongoing', 'Finished')
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+entity "Opcion" {
+  + id: int
+  + name: string
+  + description: text
+  + image_url: string
+  + eleccion_id: int
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+entity "Candidato" {
+  + id: int
+  + name: string
+  + last_name: string
+  + political_party: string
+  + opcion_id: int
+  + photo_url: string
+  + date_of_birth: date
+  + experience: text
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+entity "Usuario" {
+  + id: int
+  + name: string
+  + last_name: string
+  + dni: string
+  + email: string
+  + password: string
+  + institucion_id: int
+  + registration_date: timestamp
+  + type: enum('Administrator', 'Regular User', 'Institucion')
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+entity "Voto" {
+  + id: int
+  + usuario_id: int
+  + opcion_id: int
+  + vote_date: timestamp
+  --
+  + created_at: timestamp
+  + updated_at: timestamp
+}
+
+Institucion --{ Eleccion : realiza
+Eleccion --{ Opcion : tiene
+Opcion --{ Candidato : puede tener
+Voto --> Opcion : escoge
+Usuario --{ Voto : realiza
+Institucion --{ Usuario : contiene
+
+
+@enduml
